@@ -1,13 +1,11 @@
-import { Suspense } from "react"
-import Image from "next/image"
 import Link from "next/link"
 import Layout from "src/core/layouts/Layout"
 import { useCurrentUser } from "src/users/hooks/useCurrentUser"
 import logout from "src/auth/mutations/logout"
-import logo from "public/logo.png"
 import { useMutation } from "@blitzjs/rpc"
 import { Routes, BlitzPage } from "@blitzjs/next"
 import { TaggedTextField } from "../core/components/TaggedTextField"
+import { Suspense } from "react"
 
 /*
  * This file is just for a pleasant getting started page for your new app.
@@ -39,14 +37,14 @@ const UserInfo = () => {
   } else {
     return (
       <>
-        <Link href={Routes.SignupPage()}>
-          <a className="button small">
-            <strong>Sign Up</strong>
-          </a>
-        </Link>
         <Link href={Routes.LoginPage()}>
           <a className="button small">
             <strong>Login</strong>
+          </a>
+        </Link>
+        <Link href={Routes.SignupPage()}>
+          <a className="button small">
+            <strong>Sign Up</strong>
           </a>
         </Link>
       </>
@@ -70,6 +68,11 @@ const Home: BlitzPage = () => {
           </div>
         </div>
         <footer className="text-center mt-auto">
+          <div className="flex w-full justify-center gap-2 mb-5">
+            <Suspense fallback="Loading...">
+              <UserInfo />
+            </Suspense>
+          </div>
           <a
             href="https://blitzjs.com?utm_source=blitz-new&utm_medium=app-template&utm_campaign=blitz-new"
             target="_blank"

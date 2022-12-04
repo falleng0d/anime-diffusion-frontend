@@ -8,8 +8,8 @@ const path = require("path")
  **/
 const config = {
   sassOptions: {
-    includePaths: [path.join(__dirname, "styles")],
-  },
+    includePaths: [path.join(__dirname, "app/core/styles")]
+  }
 }
 
 module.exports = withBlitz(config)

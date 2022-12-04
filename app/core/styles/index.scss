@@ -21,3 +21,7 @@
 .logo {
   @apply w-1/2 mx-auto;
 }
+
+.input-raw {
+  @apply border-none ring-0 focus:border-none focus:ring-0 bg-transparent;
+}
