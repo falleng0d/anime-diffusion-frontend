@@ -1,32 +1,25 @@
-import { ReactNode, PropsWithoutRef, useEffect } from "react"
-import { Form as FinalForm, FormProps as FinalFormProps, FormRenderProps } from "react-final-form"
-import { z, ZodType } from "zod"
-import { validateZodSchema } from "blitz"
-export { FORM_ERROR } from "final-form"
+import { ReactNode, useEffect } from "react"
+import { FormRenderProps } from "react-final-form"
+import { ZodType } from "zod"
 import { toast } from "react-hot-toast"
-import { MutatorFunc } from "src/core/utils/final-form"
+
+export { FORM_ERROR } from "final-form"
 
 type ZodAny = ZodType<any, any, any>
 
 export interface RenderFormProps {
-  submitText?: string
   useToast?: boolean
   submitError?: string
-  submitting?: boolean
-  formProps: PropsWithoutRef<JSX.IntrinsicElements["form"]>
-  handleSubmit: FormRenderProps["handleSubmit"]
+  formProps: FormRenderProps
   children?: ReactNode
 }
 
 //  FormRenderProps<any, Partial<z.TypeOf<S>>>
 function RenderForm<S extends ZodAny>({
-  submitText,
   useToast,
   submitError,
   children,
-  submitting,
-  formProps,
-  handleSubmit
+  formProps
 }: RenderFormProps) {
   useEffect(() => {
     if (!useToast || !submitError) return
@@ -34,10 +27,9 @@ function RenderForm<S extends ZodAny>({
   }, [submitError, useToast])
 
   return (
-    <form className="form" onSubmit={handleSubmit} {...formProps}>
+    <form className="form" onSubmit={formProps.handleSubmit} {...formProps}>
       {children}
-
-      {submitError && (
+      {/*{submitError && (
         <div role="alert" style={{ color: "red" }}>
           {submitError}
         </div>
@@ -47,23 +39,26 @@ function RenderForm<S extends ZodAny>({
         <button type="submit" disabled={submitting}>
           {submitText}
         </button>
-      )}
+      )}*/}
     </form>
   )
 }
 
+/*
 export interface FormProps<S extends ZodAny>
   extends Omit<PropsWithoutRef<JSX.IntrinsicElements["form"]>, "onSubmit"> {
   useToast?: boolean
-  /** All your form fields */
+  /!** All your form fields *!/
   children?: ReactNode
-  /** Text to display in the submit button */
+  /!** Text to display in the submit button *!/
   submitText?: string
   schema?: S
   onSubmit: FinalFormProps<z.infer<S>>["onSubmit"]
   initialValues?: FinalFormProps<z.infer<S>>["initialValues"]
 }
+*/
 
+/*
 export function Form<S extends ZodAny>({
   children,
   submitText,
@@ -93,6 +88,7 @@ export function Form<S extends ZodAny>({
     />
   )
 }
+*/
 
 /*
        render={({ handleSubmit, submitting, submitError }) => (
@@ -114,4 +110,4 @@ export function Form<S extends ZodAny>({
         </form>
       )}
 */
-export default Form
+export default RenderForm
