@@ -1,33 +1,34 @@
-import { ReactNode, useEffect } from "react"
+import { PropsWithoutRef, ReactNode, useEffect } from "react"
 import { FormRenderProps } from "react-final-form"
-import { ZodType } from "zod"
+import { z } from "zod"
 import { toast } from "react-hot-toast"
 
 export { FORM_ERROR } from "final-form"
 
-type ZodAny = ZodType<any, any, any>
+type ZodAny = z.ZodType<any, any>
 
-export interface RenderFormProps {
+export interface RenderFormProps<S extends z.ZodType<any, any>>
+  extends Omit<PropsWithoutRef<JSX.IntrinsicElements["form"]>, "onSubmit"> {
   useToast?: boolean
   submitError?: string
-  formProps: FormRenderProps
   children?: ReactNode
+  formProps: FormRenderProps<z.infer<S>>
 }
 
-//  FormRenderProps<any, Partial<z.TypeOf<S>>>
-function RenderForm<S extends ZodAny>({
+function RenderForm<S extends z.ZodType<any, any>>({
   useToast,
   submitError,
   children,
-  formProps
-}: RenderFormProps) {
+  formProps,
+  ...props
+}: RenderFormProps<S>) {
   useEffect(() => {
     if (!useToast || !submitError) return
     toast.error(submitError)
   }, [submitError, useToast])
 
   return (
-    <form className="form" onSubmit={formProps.handleSubmit} {...formProps}>
+    <form className="form" onSubmit={formProps.handleSubmit} {...props}>
       {children}
       {/*{submitError && (
         <div role="alert" style={{ color: "red" }}>
