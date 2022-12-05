@@ -1,4 +1,5 @@
-import { PropsWithoutRef } from "react"
+import React, { PropsWithoutRef } from "react"
+import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query"
 
 /**
  * clsx is a small utility for constructing className strings conditionally. It has zero
@@ -84,6 +85,15 @@ export interface TaggedTextFieldProps extends PropsWithoutRef<JSX.IntrinsicEleme
 }
 
 export const TaggedTextField = function (props: TaggedTextFieldProps) {
+  const inputComponentRef = React.useRef<HTMLInputElement>(null)
+  const [tags, setTags] = React.useState<string[]>([])
+  const [inputValue, setInputValue] = React.useState("")
+
+  const addTag = (tag: string) => {
+    setTags([...tags, tag])
+    setInputValue("")
+  }
+
   return (
     <div>
       <label>
@@ -95,9 +105,35 @@ export const TaggedTextField = function (props: TaggedTextFieldProps) {
           <input
             type="text"
             className="border-none ring-0 focus:border-none focus:ring-0 bg-transparent"
+            ref={inputComponentRef}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+          <Suggest
+            options={["test", "test2"]}
+            confirmOnEnter={true}
+            onSelect={(value) => addTag(value)}
           />
         </div>
       </label>
+    </div>
+  )
+}
+
+export interface SuggestProps extends PropsWithoutRef<JSX.IntrinsicElements["div"]> {
+  query: Parameters<typeof useQuery>
+}
+
+export const Suggest = function (props: SuggestProps) {
+  const query = useQuery(...props.query)
+
+  return (
+    <div>
+      <ul>
+        {props.options.map((option) => (
+          <li>{option}</li>
+        ))}
+      </ul>
     </div>
   )
 }

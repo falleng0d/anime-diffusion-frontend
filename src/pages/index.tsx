@@ -78,7 +78,7 @@ const Home: BlitzPage = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Powered by Blitz.js
+            Powered by Blitz.json
           </a>
         </footer>
       </div>

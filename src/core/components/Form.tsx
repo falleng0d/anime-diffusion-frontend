@@ -2,12 +2,14 @@ import { PropsWithoutRef, ReactNode, useEffect } from "react"
 import { FormRenderProps } from "react-final-form"
 import { z } from "zod"
 import { toast } from "react-hot-toast"
+import { validateZodSchema } from "blitz"
+import { Form as FinalForm, FormProps as FinalFormProps } from "react-final-form"
 
 export { FORM_ERROR } from "final-form"
 
 type ZodAny = z.ZodType<any, any>
 
-export interface RenderFormProps<S extends z.ZodType<any, any>>
+export interface RenderFormProps<S extends ZodAny>
   extends Omit<PropsWithoutRef<JSX.IntrinsicElements["form"]>, "onSubmit"> {
   useToast?: boolean
   submitError?: string
@@ -15,7 +17,7 @@ export interface RenderFormProps<S extends z.ZodType<any, any>>
   formProps: FormRenderProps<z.infer<S>>
 }
 
-function RenderForm<S extends z.ZodType<any, any>>({
+function RenderForm<S extends ZodAny>({
   useToast,
   submitError,
   children,
@@ -30,43 +32,27 @@ function RenderForm<S extends z.ZodType<any, any>>({
   return (
     <form className="form" onSubmit={formProps.handleSubmit} {...props}>
       {children}
-      {/*{submitError && (
-        <div role="alert" style={{ color: "red" }}>
-          {submitError}
-        </div>
-      )}
-
-      {submitText && (
-        <button type="submit" disabled={submitting}>
-          {submitText}
-        </button>
-      )}*/}
     </form>
   )
 }
 
-/*
 export interface FormProps<S extends ZodAny>
   extends Omit<PropsWithoutRef<JSX.IntrinsicElements["form"]>, "onSubmit"> {
-  useToast?: boolean
-  /!** All your form fields *!/
+  /** All your form fields */
   children?: ReactNode
-  /!** Text to display in the submit button *!/
+  /** Text to display in the submit button */
   submitText?: string
   schema?: S
   onSubmit: FinalFormProps<z.infer<S>>["onSubmit"]
   initialValues?: FinalFormProps<z.infer<S>>["initialValues"]
 }
-*/
 
-/*
 export function Form<S extends ZodAny>({
   children,
   submitText,
   schema,
   initialValues,
   onSubmit,
-  useToast,
   ...props
 }: FormProps<S>) {
   return (
@@ -75,26 +61,8 @@ export function Form<S extends ZodAny>({
       validate={validateZodSchema(schema)}
       onSubmit={onSubmit}
       render={({ handleSubmit, submitting, submitError }) => (
-        <RenderForm
-          formProps={props}
-          submitText={submitText}
-          useToast={useToast}
-          handleSubmit={handleSubmit}
-          submitting={submitting}
-          submitError={submitError}
-        >
-          {children}
-        </RenderForm>
-      )}
-    />
-  )
-}
-*/
-
-/*
-       render={({ handleSubmit, submitting, submitError }) => (
         <form onSubmit={handleSubmit} className="form" {...props}>
-          {/* Form fields supplied as children are rendered here /}
+          {/* Form fields supplied as children are rendered here */}
           {children}
 
           {submitError && (
@@ -108,7 +76,16 @@ export function Form<S extends ZodAny>({
               {submitText}
             </button>
           )}
+
+          <style global jsx>{`
+            .form > * + * {
+              margin-top: 1rem;
+            }
+          `}</style>
         </form>
       )}
-*/
+    />
+  )
+}
+
 export default RenderForm
